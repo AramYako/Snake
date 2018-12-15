@@ -7,7 +7,9 @@
     var HEIGHT = 500;                                                              
     var snakeList,foodList, direction,eaten, intervalVar,score,running;           // snakelist is array, foodlist a array and direction determins what direction the snake will go, eaten determin if we will put new food in the canvas
     ctx.font = "20px Calibri";
-    ctx.fillText("Click me to start the game",140,250);                          // filltext a function i js, writes on the screen. 
+    ctx.fillText("Click me to start the game",140,250);   
+    var SnakeBackground = new Image();      
+               // filltext a function i js, writes on the screen. 
     
 
 
@@ -21,10 +23,33 @@
       height:20,   // height of food 
       color:'orange'  // color of food 
     };
+////-------------------------------------------------SOUND------------------------------------------------------------------------------//
+
+
+    sound = function(src) {
+      this.sound = document.createElement("audio");
+      this.sound.src = src;
+      this.sound.setAttribute("preload", "auto");
+      this.sound.setAttribute("controls", "none");
+      this.sound.style.display = "none";
+      document.body.appendChild(this.sound);
+      this.play = function(){
+          this.sound.play();
+      }
+      this.stop = function(){
+          this.sound.pause();
+      }
+  }
+    var eatingSound = new sound("sound/eat.mp3");
+  var droppingSound = new sound("sound/drop.mp3");
 
 
 
 ////-------------------------------------------------------------------------------------------------------------------------------//
+
+////-----------------------------------------------------------IMAGE--------------------------------------------------------------------//
+
+
 
 
 
@@ -37,6 +62,7 @@
                                                             //   intervalVar=setInterval(updateSnakePosition,14); atm fps is 1000/14 71 fps 
        running=false;                                       // variable false, this check if game is running or not, since we clear state the game is not running
      }
+   
      startGame();                                         // start the game, call the function 
 
     };
@@ -91,7 +117,10 @@ ctx.restore();
 
 
 
+
 ////---------------------------------------------------------Start game function----------------------------------------------------------------------//
+
+
 
 
 
@@ -105,6 +134,11 @@ startGame = function() {   // this function get callled when user press mouse.
     eaten=true;              // true, this in another function make does that a food object is created
     score=0;                // the score
     running = true;        // says that the game is running, we have it for another function that checks if game is running or not. 
+    SnakeBackground.src="images/snackbackground.jfif";  
+   
+  
+
+  
 
     intervalVar=setInterval(updateSnakePosition,14); 
                                         // The setInterval() method calls a function or evaluates an expression at specified intervals (in milliseconds).
@@ -116,6 +150,10 @@ startGame = function() {   // this function get callled when user press mouse.
 
 //********************************************************************************************************************************************************************
 
+
+drawObject = function(object,x,y,width,height) {
+  ctx.drawImage(object,x,y,width,height);
+}
 
 
 
@@ -261,6 +299,7 @@ isGameOver = function () {
             if(i == 0)
             continue;
             if(testCollisionSnake(snakeList[0], snakeList[i])){
+              droppingSound.play();
                 clearInterval(intervalVar);
                 ctx.fillText("Game over! Click to restard",140,250);
                 return;
@@ -277,14 +316,20 @@ isGameOver = function () {
     
        updateSnakePosition = function() {
       ctx.clearRect(0,0,WIDTH,HEIGHT);
+      ctx.drawImage(SnakeBackground,0,0,500,500);
+
+  
+      
       while(eaten) {
         var pos_x = Math.random()*485+5;
         var pos_y = Math.random()*485+5;
         foodList[0] = {x:pos_x,y:pos_y};
+        eatingSound.play();
         eaten =false;
       }
       foodList.forEach(drawFood);
         snakeList.forEach(drawSnake);   // after it has cleared the screen and deleted the snake, it will than draw another snake. 
+        
     
 
 
@@ -323,6 +368,10 @@ if (testCollision(snakeList[0],foodList[0])) {
          updateSnakeList();  // call another function
          checkSnakePosition();
      }
+
+
+
+
 
 
 
