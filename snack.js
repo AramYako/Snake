@@ -8,8 +8,11 @@
     var snakeList,foodList, direction,eaten, intervalVar,score,running;           // snakelist is array, foodlist a array and direction determins what direction the snake will go, eaten determin if we will put new food in the canvas
     ctx.font = "20px Calibri";
     ctx.fillText("Click me to start the game",140,250);   
-    var SnakeBackground = new Image();      
+    var SnakeBackground = new Image();  
+    var SnakeHead = new Image();      
+    var SnakeFood = new Image();
                // filltext a function i js, writes on the screen. 
+
     
 
 
@@ -19,9 +22,10 @@
       color:'green' // color of the snack
     };
     var food = {
-      width:20,    // width of food
-      height:20,   // height of food 
-      color:'orange'  // color of food 
+      width:30,    // width of food
+      height:30,   // height of food 
+      color:'orange',  // color of food 
+    
     };
 ////-------------------------------------------------SOUND------------------------------------------------------------------------------//
 
@@ -90,7 +94,10 @@ drawSnake = function(sb,i) {
 
 ctx.save();
 if (i == 0)                  // index =0 the head
+
+
 ctx.fillStyle = 'black';
+
 else
 ctx.fillStyle = snakeBody.color;
 
@@ -107,9 +114,15 @@ ctx.fillRect(sb.x,sb.y,snakeBody.width,snakeBody.height);   // this part take th
 ctx.restore();
 }
 drawFood = function(f,i) {
+
+SnakeFood.src="images/snakefood.png";
+
 ctx.save();
-ctx.fillStyle = food.color;
-ctx.fillRect(f.x,f.y,food.width,food.height);
+
+ctx.drawImage(SnakeFood, f.x, f.y, food.width, food.height);
+
+//ctx.fillStyle = food.color;
+//ctx.fillRect(f.x,f.y,food.width,food.height);
 ctx.restore();
 }
 
@@ -134,7 +147,8 @@ startGame = function() {   // this function get callled when user press mouse.
     eaten=true;              // true, this in another function make does that a food object is created
     score=0;                // the score
     running = true;        // says that the game is running, we have it for another function that checks if game is running or not. 
-    SnakeBackground.src="images/snackbackground.jfif";  
+    SnakeBackground.src="images/grass2.jpg";  
+    SnakeHead.src="images/snakehead.jpg";
    
   
 
@@ -317,6 +331,7 @@ isGameOver = function () {
        updateSnakePosition = function() {
       ctx.clearRect(0,0,WIDTH,HEIGHT);
       ctx.drawImage(SnakeBackground,0,0,500,500);
+   
 
   
       
@@ -359,9 +374,9 @@ if (testCollision(snakeList[0],foodList[0])) {
 
 
 
-
-
-      ctx.fillText("Score: " +score,420,30)
+      ctx.font = "23px Verdana";
+   
+      ctx.fillText("Score: " +score,380,30)
       isGameOver();
       
       
